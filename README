@@ -1,0 +1,59 @@
+# Tasks:
+
+• We will continue using the Breast Cancer dataset from Homework 1, more specifically,
+with the top two most highly correlated features: worst perimeter and worst
+concave points.
+
+• Please DO NOT split the dataset into training/validation/testing for this assignment.
+
+• Declare a SEED constant and assign it 5275 (our course number).
+
+• While programming, please replace random\*state with SEED in your code to ensure
+reproducibility and consistency as we work through the assignment, allowing us to
+reference the same results later.
+
+• Copy the AdalineGD code from the book and substitute random_state with SEED
+where appropriate.
+
+• Train the AdalineGD algorithm on the two features from the breast cancer dataset
+using the same hyperparameter values from the book, and learn (or fit) two models,
+ada1 and ada2.
+
+• Show the errors for the two learning rates by plotting the results in a figure similar to
+Figure 2.11. (0.5 points) Also, print the errors (adalineGD.losses\*) to the console
+to track the values at each iteration (0.5 points)
+
+• Annotate the plots by including the hyperparameter values in the title or legend for
+easier identification. (1 point)
+
+• Add timing functionality to record how long each model takes to train. You can use the
+Python timeit library. Print the confusion matrix for each model (you can draw
+inspiration from the code I shared with you for the previous homework) (1 point)
+
+• Add multi-line comments to the script to briefly explain the ada1 and ada2 results.
+Note that the plot on the left displays the log errors. As you discuss your findings, pay
+particular attention to the shape of the error function on the y-axis as it is plotted
+against the increasing number of epochs on the x-axis. (1 point)
+
+• Train two additional models, ada3 and ada4, by selecting different hyperparameter
+values that improve the results. Ensure that ada3 performs better than ada2 and that
+ada4 outperforms ada3. (1 point)
+
+• In the comments, explain your rationale for selecting the new hyperparameter values
+and analyze the models' behavior in relation to the errors. (1 point)
+
+• Discuss how the adjustments to the hyperparameters have impacted the models’
+performance and efficiency, focusing on error reduction, execution time, as well as
+any apparent convergence patterns (1 point)
+
+• Standardize the features and run all four experiments from above on the standardized
+dataset. (1 point)
+
+• Contrast the results of the original vs standardized datasets by discussing the error,
+execution time, and performance for all experiments. (1 point)
+
+• Train a final model, ada5, using your best judgment for its configuration (i.e., original
+or standardized features along with your best guess for hyperparameter values) to
+achieve the highest prediction performance among all models. You can try various
+configurations before you finalize the ada5 model. Print out the performance and
+execution time. Add comments to discuss this experiment. (1 point)

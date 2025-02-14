@@ -16,6 +16,8 @@ plt.show(block=True)
 
 SEED = 5275  ## Our replacement for the random_state value
 
+## Adaline class
+
 
 class AdalineGD:
     """ADAptive LInear NEuron classifier.
@@ -89,3 +91,75 @@ class AdalineGD:
     def predict(self, X):
         """Return class label after unit step"""
         return np.where(self.activation(self.net_input(X)) >= 0.5, 1, 0)
+
+
+## Logic to plot decision regions
+
+
+def plot_decision_regions(X, y, classifier, resolution=0.02):
+    # setup marker generator and color map
+    markers = ("o", "s", "^", "v", "<")
+    colors = ("red", "blue", "lightgreen", "gray", "cyan")
+    cmap = ListedColormap(colors[: len(np.unique(y))])
+
+    # plot the decision surface
+    x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx1, xx2 = np.meshgrid(
+        np.arange(x1_min, x1_max, resolution), np.arange(x2_min, x2_max, resolution)
+    )
+    lab = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)
+    lab = lab.reshape(xx1.shape)
+    plt.contourf(xx1, xx2, lab, alpha=0.3, cmap=cmap)
+    plt.xlim(xx1.min(), xx1.max())
+    plt.ylim(xx2.min(), xx2.max())
+    # plot class examples
+    for idx, cl in enumerate(np.unique(y)):
+        plt.scatter(
+            x=X[y == cl, 0],
+            y=X[y == cl, 1],
+            alpha=0.8,
+            c=colors[idx],
+            marker=markers[idx],
+            label=f"Class {cl}",
+            edgecolor="black",
+        )
+
+
+######## Plotting against learning rate 0.1 (ada1) and 0.0001 (ada2) ########
+
+# select target value
+y = df["target"].values
+
+# select features to use in training
+training_features = [24, 29]
+
+# select training data
+X = df.iloc[0:569, training_features].values
+
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+
+ada1 = AdalineGD(n_iter=15, eta=0.1).fit(X, y)
+ax[0].plot(range(1, len(ada1.losses_) + 1), np.log10(ada1.losses_), marker="o")
+ax[0].set_xlabel("Epochs")
+ax[0].set_ylabel("log(Mean squared error)")
+ax[0].set_title("Adaline - Learning rate 0.1")
+
+# Print loss values for ada1
+print("Loss values for ada1 (eta 0.1):")
+for i, loss in enumerate(ada1.losses_, start=1):
+    print(f"Epoch {i}: {loss}")
+print("\n")
+
+ada2 = AdalineGD(n_iter=15, eta=0.0001).fit(X, y)
+ax[1].plot(range(1, len(ada2.losses_) + 1), ada2.losses_, marker="o")
+ax[1].set_xlabel("Epochs")
+ax[1].set_ylabel("Mean squared error")
+ax[1].set_title("Adaline - Learning rate 0.0001")
+
+# Print loss values for ada2
+print("Loss values for ada2 (eta 0.0001):")
+for i, loss in enumerate(ada2.losses_, start=1):
+    print(f"Epoch {i}: {loss}")
+
+plt.show()
