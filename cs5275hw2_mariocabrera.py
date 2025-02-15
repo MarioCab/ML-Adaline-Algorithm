@@ -129,82 +129,97 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
         )
 
 
-######## TESTS ########
+def run_ada(eta, iter, feature1, feature2):
+    """Uses the given parameters to run a new Adaline algorithm.
 
-#### Selecting features and values
+    Parameters
+    ----------
+    eta : float
+      Learning rate (between 0.0 and 1.0)
+    iter : integer
+      Epochs to run the algorithm with
+    feature1 : integer
+      Training feature 1.
+    feature2 : integer
+      Training feature 2.
 
-y = df["target"].values  # select target value
-training_features = [24, 29]  # select features to use in training
-X = df.iloc[0:569, training_features].values  # select training data
+    """
+    y = df["target"].values  # select target value
+    training_features = [feature1, feature2]  # select features to use in training
+    X = df.iloc[0:569, training_features].values  # select training data
 
-fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+    # Creates a 1 row 1 column figure to map the learning rate
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10, 4))
 
-#### Training for ada1 with a learning rate of 0.1
-start_time = timeit.default_timer()
-ada1 = AdalineGD(n_iter=15, eta=0.1).fit(X, y)
-end_time = timeit.default_timer()
-ada1_time = end_time - start_time
-print(f"\nTraining time for ada1 (seconds): {ada1_time}")  # Print ada1 training time
-ax[0].plot(range(1, len(ada1.losses_) + 1), np.log10(ada1.losses_), marker="o")
-ax[0].set_xlabel("Epochs")
-ax[0].set_ylabel("log(Mean squared error)")
-ax[0].set_title("Adaline - Learning rate 0.1")
+    start_time = timeit.default_timer()  # Starts timer
+    ada = AdalineGD(n_iter=15, eta=eta).fit(X, y)
+    end_time = timeit.default_timer()  # Ends timer
+    ada_time = end_time - start_time  # Shows time took to train
+    print(
+        f"\nTraining time for ada with ({eta}) learning rate (in seconds): {ada_time}"
+    )
+    ax.plot(range(1, len(ada.losses_) + 1), ada.losses_, marker="o")
+    ax.set_xlabel("Epochs")
+    ax.set_ylabel("Mean squared error")
+    ax.set_title(f"Adaline - Learning rate {eta}")
 
-#### Training for ada2 with a learning rate of 0.0001
-start_time = timeit.default_timer()
-ada2 = AdalineGD(n_iter=15, eta=0.0001).fit(X, y)
-end_time = timeit.default_timer()
-ada2_time = end_time - start_time
-print(f"\nTraining time for ada2 (seconds): {ada1_time}")  # Print ada2 training time
-ax[1].plot(range(1, len(ada2.losses_) + 1), ada2.losses_, marker="o")
-ax[1].set_xlabel("Epochs")
-ax[1].set_ylabel("Mean squared error")
-ax[1].set_title("Adaline - Learning rate 0.0001")
+    # Print the loss values
+    print(f"\nLoss values for ada with ({eta}) learning rate:")
+    for i, loss in enumerate(ada.losses_, start=1):
+        print(f"Epoch {i}: {loss}")
+    print("\n")
 
+    # Calculate confusion matrix
+    y_pred = ada.predict(X)
+    confmat = confusion_matrix(y, y_pred)
+    print(f"Confusion Matrix for ada with ({eta}) learning rate:")
+    print(confmat)
 
-#### Get loss values for ada1
-print("\nLoss values for ada1 (eta 0.1):")
-for i, loss in enumerate(ada1.losses_, start=1):
-    print(f"Epoch {i}: {loss}")
-print("\n")
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.matshow(confmat, cmap=plt.cm.Blues, alpha=0.3)
+    for i in range(confmat.shape[0]):
+        for j in range(confmat.shape[1]):
+            ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
+    ax.xaxis.set_ticks_position("bottom")
+    plt.title(f"Ada with ({eta}) learning rate")
+    plt.xlabel("Predicted Label")
+    plt.ylabel("True Label")
 
-#### Get loss values for ada2
-print("Loss values for ada2 (eta 0.0001):")
-for i, loss in enumerate(ada2.losses_, start=1):
-    print(f"Epoch {i}: {loss}")
-print("\n")
-
-#### Crete and map a confusion matrix for ada1
-y_pred = ada1.predict(X)
-confmat = confusion_matrix(y, y_pred)
-print("Confusion Matrix for ada1:")
-print(confmat)
-
-fig, ax = plt.subplots(figsize=(5, 5))
-ax.matshow(confmat, cmap=plt.cm.Blues, alpha=0.3)
-for i in range(confmat.shape[0]):
-    for j in range(confmat.shape[1]):
-        ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
-ax.xaxis.set_ticks_position("bottom")
-plt.title("Ada1 (0.1)")
-plt.xlabel("Predicted Label")
-plt.ylabel("True Label")
-
-#### Crete and map a confusion matrix for ada2
-y_pred = ada2.predict(X)
-confmat = confusion_matrix(y, y_pred)
-print("Confusion Matrix for ada2:")
-print(confmat)
-
-fig, ax = plt.subplots(figsize=(5, 5))
-ax.matshow(confmat, cmap=plt.cm.Blues, alpha=0.3)
-for i in range(confmat.shape[0]):
-    for j in range(confmat.shape[1]):
-        ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
-ax.xaxis.set_ticks_position("bottom")
-plt.title("Ada2 (0.0001)")
-plt.xlabel("Predicted Label")
-plt.ylabel("True Label")
+    plt.show()  # Display all of the graphs
 
 
-plt.show()  # Display all of the graphs
+######## TEST ADA1 vs ADA2 ########
+
+#### Training for Ada1 with a learning rate of 0.1 on features 24 and 29
+ada1 = run_ada(0.1, 15, 24, 29)
+"""
+  Using a learning rate of 0.1 at 15 epochs we see that the loss function begins to decrease rapidly in the beginning, and then start to converge at around 8 epochs.
+  At the end of the 15 epochs we see that the loss function value is sitting at around .25
+  Based on the rate that convergence occurred, and that the loss value got to .25 at only 15 epochs it is safe to say that the learning rate here seems to be a good rate to match our given features (or so I thought until analyzing the rest of the data).
+  As far as the confusion matrix is concerned, we didn't get any true positive or false positive guesses. This seems to indicate that there were no positive outcomes that the algorithm was guessing at all, just negative outcomes.
+    """
+
+
+#### Training for Ada2 with a learning rate of 0.0001 on features 24 and 29
+ada2 = run_ada(0.0001, 15, 24, 29)
+"""
+  Using a learning rate of 0.0001 at 15 epochs we see that the loss function value decreases linearly at a slow rate and never converges.
+  This would suggest that the learning rate is too low for the algorithm and would need to run for
+  much longer than 15 epochs for us to see any sort of convergence.
+  At the end of the 15 epochs we see that the loss function value is sitting at around .6255 without coming close to converging, so this wouldn't make many accurate guesses without being adjusted.
+  As far as the confusion matrix is concerned, we didn't get any false negative or true negative guesses. This seems to indicate that there were no negative outcomes that the algorithm was guessing at all, just positive outcomes.
+    """
+
+#### Comparing Ada1 and Ada2
+"""
+These results were interesting and demonstrated a great example of how the learning rate can affect our perception of the data. At a 0.1 learning rate with the given features, we see a loss value of .25
+compared to the .6255 of the .0001 learning rate model. Even if the models were to run for an additional 15 epochs (30 total) the 0.0001 learning rate algorithm most likely still would be vastly inferior to the 0.1 model
+even taking into consideration that the 0.1 model was already leveling out its convergence at only 15 epochs.
+
+The most interesting data that we found from these comparisons however is the confusion matrix. Even though these models were using the same dataset with the same two features, the 0.1 learning rate model showed a 100%
+bias towards positive outcomes, and the 0.0001 model did the opposite, with a 100% bias towards negative outcomes.
+
+What this tells me is that despite my initial beliefs that 0.1 is a vastly superior learning rate, the honest truth is that NEITHER of them seem to be good. 
+This is evident in our models bias. The lack of negative outcomes from the 0.1 model suggest that the rate was too fast, causing the weight to be over adjusted.
+Similarly, the 0.0001 model showing only negative outcomes suggests that the rate was too slow, causing the weight to not be adjusted fast enough.
+    """
