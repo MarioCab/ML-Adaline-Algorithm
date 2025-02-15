@@ -3,7 +3,10 @@
 from sklearn.datasets import load_breast_cancer
 from matplotlib.colors import ListedColormap
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix
 
+
+import timeit
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
@@ -128,38 +131,78 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 
 ######## Plotting against learning rate 0.1 (ada1) and 0.0001 (ada2) ########
 
-# select target value
-y = df["target"].values
-
-# select features to use in training
-training_features = [24, 29]
-
-# select training data
-X = df.iloc[0:569, training_features].values
+y = df["target"].values  # select target value
+training_features = [24, 29]  # select features to use in training
+X = df.iloc[0:569, training_features].values  # select training data
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
 
+#### Training for ada1
+start_time = timeit.default_timer()
 ada1 = AdalineGD(n_iter=15, eta=0.1).fit(X, y)
+end_time = timeit.default_timer()
+ada1_time = end_time - start_time
+print(f"\nTraining time for ada1 (seconds): {ada1_time}")  # Print ada1 training time
 ax[0].plot(range(1, len(ada1.losses_) + 1), np.log10(ada1.losses_), marker="o")
 ax[0].set_xlabel("Epochs")
 ax[0].set_ylabel("log(Mean squared error)")
 ax[0].set_title("Adaline - Learning rate 0.1")
 
-# Print loss values for ada1
-print("Loss values for ada1 (eta 0.1):")
-for i, loss in enumerate(ada1.losses_, start=1):
-    print(f"Epoch {i}: {loss}")
-print("\n")
-
+#### Training for ada2
+start_time = timeit.default_timer()
 ada2 = AdalineGD(n_iter=15, eta=0.0001).fit(X, y)
+end_time = timeit.default_timer()
+ada2_time = end_time - start_time
+print(f"\nTraining time for ada2 (seconds): {ada1_time}")  # Print ada2 training time
 ax[1].plot(range(1, len(ada2.losses_) + 1), ada2.losses_, marker="o")
 ax[1].set_xlabel("Epochs")
 ax[1].set_ylabel("Mean squared error")
 ax[1].set_title("Adaline - Learning rate 0.0001")
 
-# Print loss values for ada2
+
+#### Get loss values for ada1
+print("\nLoss values for ada1 (eta 0.1):")
+for i, loss in enumerate(ada1.losses_, start=1):
+    print(f"Epoch {i}: {loss}")
+print("\n")
+
+#### Get loss values for ada2
 print("Loss values for ada2 (eta 0.0001):")
 for i, loss in enumerate(ada2.losses_, start=1):
     print(f"Epoch {i}: {loss}")
+print("\n")
 
-plt.show()
+#### Crete and map a confusion matrix for ada1
+y_pred = ada1.predict(X)
+confmat = confusion_matrix(y, y_pred)
+print("Confusion Matrix for ada1:")
+print(confmat)
+
+fig, ax = plt.subplots(figsize=(5, 5))
+ax.matshow(confmat, cmap=plt.cm.Blues, alpha=0.3)
+for i in range(confmat.shape[0]):
+    for j in range(confmat.shape[1]):
+        ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
+ax.xaxis.set_ticks_position("bottom")
+plt.title("Ada1 (0.1)")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+
+#### Crete and map a confusion matrix for ada2
+y_pred = ada2.predict(X)
+confmat = confusion_matrix(y, y_pred)
+print("Confusion Matrix for ada2:")
+print(confmat)
+
+fig, ax = plt.subplots(figsize=(5, 5))
+ax.matshow(confmat, cmap=plt.cm.Blues, alpha=0.3)
+for i in range(confmat.shape[0]):
+    for j in range(confmat.shape[1]):
+        ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
+ax.xaxis.set_ticks_position("bottom")
+plt.title("Ada2 (0.0001)")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+
+
+plt.show()  # Display all of the graphs
