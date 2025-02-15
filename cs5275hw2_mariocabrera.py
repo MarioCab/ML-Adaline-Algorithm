@@ -129,7 +129,9 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
         )
 
 
-######## Plotting against learning rate 0.1 (ada1) and 0.0001 (ada2) ########
+######## TESTS ########
+
+#### Selecting features and values
 
 y = df["target"].values  # select target value
 training_features = [24, 29]  # select features to use in training
@@ -137,7 +139,7 @@ X = df.iloc[0:569, training_features].values  # select training data
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
 
-#### Training for ada1
+#### Training for ada1 with a learning rate of 0.1
 start_time = timeit.default_timer()
 ada1 = AdalineGD(n_iter=15, eta=0.1).fit(X, y)
 end_time = timeit.default_timer()
@@ -148,7 +150,7 @@ ax[0].set_xlabel("Epochs")
 ax[0].set_ylabel("log(Mean squared error)")
 ax[0].set_title("Adaline - Learning rate 0.1")
 
-#### Training for ada2
+#### Training for ada2 with a learning rate of 0.0001
 start_time = timeit.default_timer()
 ada2 = AdalineGD(n_iter=15, eta=0.0001).fit(X, y)
 end_time = timeit.default_timer()
