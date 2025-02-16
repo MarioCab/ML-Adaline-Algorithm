@@ -156,15 +156,15 @@ def run_ada(eta, iter, feature1, feature2):
     end_time = timeit.default_timer()  # Ends timer
     ada_time = end_time - start_time  # Shows time took to train
     print(
-        f"\nTraining time for ada with ({eta}) learning rate (in seconds): {ada_time}"
+        f"\nTraining time for ada with ({eta}) learning rate (in seconds) and ({iter}) epochs: {ada_time}"
     )
     ax.plot(range(1, len(ada.losses_) + 1), ada.losses_, marker="o")
     ax.set_xlabel("Epochs")
     ax.set_ylabel("Mean squared error")
-    ax.set_title(f"Adaline - Learning rate {eta}")
+    ax.set_title(f"Adaline - Learning rate {eta} and ({iter}) epochs")
 
     # Print the loss values
-    print(f"\nLoss values for ada with ({eta}) learning rate:")
+    print(f"\nLoss values for ada with ({eta}) learning rate and ({iter}) epochs):")
     for i, loss in enumerate(ada.losses_, start=1):
         print(f"Epoch {i}: {loss}")
     print("\n")
@@ -172,7 +172,7 @@ def run_ada(eta, iter, feature1, feature2):
     # Calculate confusion matrix
     y_pred = ada.predict(X)
     confmat = confusion_matrix(y, y_pred)
-    print(f"Confusion Matrix for ada with ({eta}) learning rate:")
+    print(f"Confusion Matrix for ada with ({eta}) learning rate and ({iter}) epochs:")
     print(confmat)
 
     fig, ax = plt.subplots(figsize=(5, 5))
@@ -181,7 +181,7 @@ def run_ada(eta, iter, feature1, feature2):
         for j in range(confmat.shape[1]):
             ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
     ax.xaxis.set_ticks_position("bottom")
-    plt.title(f"Ada with ({eta}) learning rate")
+    plt.title(f"Ada with ({eta}) learning rate and ({iter}) epochs")
     plt.xlabel("Predicted Label")
     plt.ylabel("True Label")
 
@@ -217,15 +217,17 @@ def run_ada_std(eta, iter, feature1, feature2):
     end_time = timeit.default_timer()  # Ends timer
     ada_time = end_time - start_time  # Shows time took to train
     print(
-        f"\nTraining time for STANDARDIZED ada with ({eta}) learning rate (in seconds): {ada_time}"
+        f"\nTraining time for STANDARDIZED ada with ({eta}) learning rate (in seconds) and ({iter}) epochs: {ada_time}"
     )
     ax.plot(range(1, len(ada.losses_) + 1), ada.losses_, marker="o")
     ax.set_xlabel("Epochs")
     ax.set_ylabel("Mean squared error")
-    ax.set_title(f"STANDARDIZED Adaline - Learning rate {eta}")
+    ax.set_title(f"STANDARDIZED Adaline - Learning rate {eta} and ({iter}) epochs")
 
     # Print the loss values
-    print(f"\nLoss values for STANDARDIZED ada with ({eta}) learning rate:")
+    print(
+        f"\nLoss values for STANDARDIZED ada with ({eta}) learning rate and ({iter}) epochs:"
+    )
     for i, loss in enumerate(ada.losses_, start=1):
         print(f"Epoch {i}: {loss}")
     print("\n")
@@ -233,7 +235,9 @@ def run_ada_std(eta, iter, feature1, feature2):
     # Calculate confusion matrix
     y_pred = ada.predict(X)
     confmat = confusion_matrix(y, y_pred)
-    print(f"Confusion Matrix for STANDARDIZED ada with ({eta}) learning rate:")
+    print(
+        f"Confusion Matrix for STANDARDIZED ada with ({eta}) learning rate and ({iter}) epochs:"
+    )
     print(confmat)
 
     fig, ax = plt.subplots(figsize=(5, 5))
@@ -242,7 +246,7 @@ def run_ada_std(eta, iter, feature1, feature2):
         for j in range(confmat.shape[1]):
             ax.text(j, i, str(confmat[i, j]), va="center", ha="center")
     ax.xaxis.set_ticks_position("bottom")
-    plt.title(f"STANDARDIZED Ada with ({eta}) learning rate")
+    plt.title(f"STANDARDIZED Ada with ({eta}) learning rate and ({iter}) epochs")
     plt.xlabel("Predicted Label")
     plt.ylabel("True Label")
 
@@ -461,93 +465,188 @@ Epoch 15: 0.1918684889260187
 
 Confusion Matrix for STANDARDIZED ada with (0.1) learning rate:
 [[101 111]
-[ 50 307]]
+[ 50 307]] 71.7% accurate
 
     """
 
 #### Run ada2 again with the same parameters || STANDARDIZED
 ada2_Std = run_ada_std(0.0001, 15, 24, 29)
 """
-Training time for STANDARDIZED ada with (0.1) learning rate (in seconds): 0.0005957999965175986
+Training time for STANDARDIZED ada with (0.0001) learning rate (in seconds): 0.0005950000195298344
 
-Loss values for STANDARDIZED ada with (0.1) learning rate:
+Loss values for STANDARDIZED ada with (0.0001) learning rate:
 Epoch 1: 0.6263276377601824
-Epoch 2: 0.4632935510478784
-Epoch 3: 0.36262818192214763
-Epoch 4: 0.2998396552932518
-Epoch 5: 0.26036579527424997
-Epoch 6: 0.23539499092778793
-Epoch 7: 0.21951953227017063
-Epoch 8: 0.20938381484017088
-Epoch 9: 0.20288784722453113
-Epoch 10: 0.19870889905304634
-Epoch 11: 0.19600971329318337
-Epoch 12: 0.19425832123895923
-Epoch 13: 0.19311571614847917
-Epoch 14: 0.192365325458327
-Epoch 15: 0.1918684889260187
+Epoch 2: 0.6261448452781706
+Epoch 3: 0.6259621318910599
+Epoch 4: 0.6257794975632753
+Epoch 5: 0.6255969422592592
+Epoch 6: 0.6254144659434698
+Epoch 7: 0.6252320685803827
+Epoch 8: 0.62504975013449
+Epoch 9: 0.624867510570301
+Epoch 10: 0.624685349852341
+Epoch 11: 0.6245032679451525
+Epoch 12: 0.6243212648132949
+Epoch 13: 0.6241393404213439
+Epoch 14: 0.6239574947338922
+Epoch 15: 0.6237757277155489
 
 
-Confusion Matrix for STANDARDIZED ada with (0.1) learning rate:
-[[101 111]
-[ 50 307]]
+Confusion Matrix for STANDARDIZED ada with (0.0001) learning rate:
+[[212   0]
+[357   0]]
 
     """
 
 #### Run ada3 again with the same parameters || STANDARDIZED
 ada3_Std = run_ada_std(0.025, 30, 24, 29)
 """
-Training time for STANDARDIZED ada with (0.1) learning rate (in seconds): 0.0005957999965175986
+Training time for STANDARDIZED ada with (0.025) learning rate (in seconds): 0.0008435000199824572
 
-Loss values for STANDARDIZED ada with (0.1) learning rate:
+Loss values for STANDARDIZED ada with (0.025) learning rate:
 Epoch 1: 0.6263276377601824
-Epoch 2: 0.4632935510478784
-Epoch 3: 0.36262818192214763
-Epoch 4: 0.2998396552932518
-Epoch 5: 0.26036579527424997
-Epoch 6: 0.23539499092778793
-Epoch 7: 0.21951953227017063
-Epoch 8: 0.20938381484017088
-Epoch 9: 0.20288784722453113
-Epoch 10: 0.19870889905304634
-Epoch 11: 0.19600971329318337
-Epoch 12: 0.19425832123895923
-Epoch 13: 0.19311571614847917
-Epoch 14: 0.192365325458327
-Epoch 15: 0.1918684889260187
+Epoch 2: 0.5818607085559044
+Epoch 3: 0.5420643960817807
+Epoch 4: 0.5064303366786554
+Epoch 5: 0.474507992069775
+Epoch 6: 0.44589772789022586
+Epoch 7: 0.42024476633724506
+Epoch 8: 0.3972338967806475
+Epoch 9: 0.37658484429995903
+Epoch 10: 0.35804820992444375
+Epoch 11: 0.34140190818575195
+Epoch 12: 0.32644803774077685
+Epoch 13: 0.313010129531428
+Epoch 14: 0.3009307244284029
+Epoch 15: 0.29006923873642004
+Epoch 16: 0.2803000814708897
+Epoch 17: 0.271510992080251
+Epoch 18: 0.26360157139461277
+Epoch 19: 0.25648198212405476
+Epoch 20: 0.2500717982892824
+Epoch 21: 0.24429898561182714
+Epoch 22: 0.23909899717918628
+Epoch 23: 0.23441397068221984
+Epoch 24: 0.23019201524054275
+Epoch 25: 0.2263865773231655
+Epoch 26: 0.22295587656758356
+Epoch 27: 0.21986240342774577
+Epoch 28: 0.2170724715628712
+Epoch 29: 0.214555818734691
+Epoch 30: 0.21228525072733895
 
 
-Confusion Matrix for STANDARDIZED ada with (0.1) learning rate:
-[[101 111]
-[ 50 307]]
+Confusion Matrix for STANDARDIZED ada with (0.025) learning rate:
+[[153  59]
+[125 232]]
 
     """
 
 #### Run ada4 again with the same parameters || STANDARDIZED
 ada4_Std = run_ada_std(0.0252, 30, 24, 29)
 """
-Training time for STANDARDIZED ada with (0.1) learning rate (in seconds): 0.0005957999965175986
+Training time for STANDARDIZED ada with (0.0252) learning rate (in seconds): 0.0008996999822556973
 
-Loss values for STANDARDIZED ada with (0.1) learning rate:
+Loss values for STANDARDIZED ada with (0.0252) learning rate:
 Epoch 1: 0.6263276377601824
-Epoch 2: 0.4632935510478784
-Epoch 3: 0.36262818192214763
-Epoch 4: 0.2998396552932518
-Epoch 5: 0.26036579527424997
-Epoch 6: 0.23539499092778793
-Epoch 7: 0.21951953227017063
-Epoch 8: 0.20938381484017088
-Epoch 9: 0.20288784722453113
-Epoch 10: 0.19870889905304634
-Epoch 11: 0.19600971329318337
-Epoch 12: 0.19425832123895923
-Epoch 13: 0.19311571614847917
-Epoch 14: 0.192365325458327
-Epoch 15: 0.1918684889260187
+Epoch 2: 0.5815149413217006
+Epoch 3: 0.5414456973835607
+Epoch 4: 0.5055996220612832
+Epoch 5: 0.4735160685063106
+Epoch 6: 0.44478683386499357
+Epoch 7: 0.4190498815917191
+Epoch 8: 0.3959838565496287
+Epoch 9: 0.3753032874785265
+Epoch 10: 0.3567543860728345
+Epoch 11: 0.3401113644615995
+Epoch 12: 0.3251732036306455
+Epoch 13: 0.3117608145398053
+Epoch 14: 0.29971454159154387
+Epoch 15: 0.2888919648931081
+Epoch 16: 0.2791659635857284
+Epoch 17: 0.2704230075301485
+Epoch 18: 0.26256164895594986
+Epoch 19: 0.25549118940335075
+Epoch 20: 0.24913050049603747
+Epoch 21: 0.2434069798551812
+Epoch 22: 0.23825562586037743
+Epoch 23: 0.23361821703598856
+Epoch 24: 0.22944258363666825
+Epoch 25: 0.22568196056250214
+Epoch 26: 0.22229441208539974
+Epoch 27: 0.21924232004251032
+Epoch 28: 0.21649192817384227
+Epoch 29: 0.21401293617079134
+Epoch 30: 0.21177813777781163
 
 
-Confusion Matrix for STANDARDIZED ada with (0.1) learning rate:
-[[101 111]
-[ 50 307]]
+Confusion Matrix for STANDARDIZED ada with (0.0252) learning rate:
+[[152  60]
+[123 234]]   67.8% accurate
+
+    """
+
+### Discussion on standardized features for all ada models
+"""
+Firstly, it should be noted that across the board, the standardized features improved all of the models efficiency in all categories. Run time was quicker, confusion matrix was less bias with more accurate
+predictions, and the loss value was lower. That being said, it goes to show just how inefficient ada2 with a 0.0001 learning rate really is. With the rate being that slow, there was hardly a difference in the standardized
+data vs the non-standardized data. This rings even more true once you compare just how much more efficient the other ada models were with standardized data vs the non-standardized (nearly double).
+
+Even ada1 which was previously written off due to being 100% biased towards the negative has shown such an outstanding improvement that it could be argued that it might be the best model, just slightly beating out
+ada4 when comparing both of their standardized results. The reason for that statement lends itself to the following factors
+
+  1) ada1_Std has the lowest loss factor value of all datasets at 0.1918684889260187 on its 15th epoch (lower than even ada4_std at its 30th epoch)
+
+  2) The confusion matrix for both of these models is no longer overtly bias, therefore deciding which is functioning better needs to be shown based on the true negative + true positive guesses compared to the total
+    doing this, we see that the ada1_std is nearly 4% more accurate than ada4_std
+  
+I also want to re-iterate the fact that ada1_std has taken the lead here so-to-speak, with half of the iterations taken than the second place contender of ada4_std.
+
+
+    """
+
+## Final Model ada5
+ada4_Std = run_ada_std(0.11, 22, 24, 29)
+"""
+For my final model, ada5, I decided to use the standardized data, being that it across the board proved to be more efficient in the prior tests.
+I also decided to go slightly higher than 0.1 and increase the epochs to 22. The logic behind this follows:
+
+The confusion matrix was a big factor in my decision. I had noticed that even running the ada1_std at higher epochs caused the accuracy to be lower. I experimented with the iterations and the learning rate and found
+that I was hitting a point where any learning rate higher than 0.11 also caused the confusion matrix to become less and less accurate. 
+
+I had also taken note that the model was converged to the point where even if I were to run 10x the amount of epochs, I wouldn't see more than a half a percentage decrease in the loss value, but I would lose a fair bit of
+accuracy in the confusion matrix. The trade off at that point wasn't worth it. I decided to cut the epochs off at the point where the convergence made any difference negligible, in this case that happened to be 22.
+I also sacrificed a slight bit of the confusion matrix accuracy to bring the loss value as low as possible. The below results are what I was left with
+
+Training time for STANDARDIZED ada with (0.11) learning rate (in seconds): 0.0007322999881580472
+
+Loss values for STANDARDIZED ada with (0.11) learning rate:
+Epoch 1: 0.6263276377601824
+Epoch 2: 0.44916574145868654
+Epoch 3: 0.34558369687438456
+Epoch 4: 0.2842509249605237
+Epoch 5: 0.24758768770129505
+Epoch 6: 0.22551176679686472
+Epoch 7: 0.21214234295069262
+Epoch 8: 0.20400552943726244
+Epoch 9: 0.1990300846752412
+Epoch 10: 0.19597266562478116
+Epoch 11: 0.19408317394329572
+Epoch 12: 0.1929073659582878
+Epoch 13: 0.19216932239211162
+Epoch 14: 0.1917009923422679
+Epoch 15: 0.19139975191879338
+Epoch 16: 0.19120274938031054
+Epoch 17: 0.19107135782042012
+Epoch 18: 0.19098173485897335
+Epoch 19: 0.19091908130755753
+Epoch 20: 0.19087414433619096
+Epoch 21: 0.19084108448101272
+Epoch 22: 0.19081617233691597
+
+
+Confusion Matrix for STANDARDIZED ada with (0.11) learning rate:
+[[ 88 124]
+[ 38 319]] 71.52% correct
 
     """
